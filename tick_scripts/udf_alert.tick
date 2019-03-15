@@ -1,0 +1,15 @@
+var data = batch
+        |query('SELECT * FROM "telegraf_test"."autogen"."humid"')
+          .period(20s)
+          .every(20s)
+
+data
+   @hash()
+     .field('v')
+    |alert()
+      .crit(lambda: TRUE)
+      .log('C:\\Users\\<user>\\Dev\\kapacitor-1.5.2-1\\udf_alert.log')
+    |InfluxDBOut()
+      .database('test_udf')
+      .retentionPolicy('autogen')
+      .measurement('hash')
